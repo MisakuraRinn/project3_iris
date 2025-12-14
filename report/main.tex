@@ -1,0 +1,251 @@
+\documentclass[11pt,a4paper]{article}
+
+% =========================
+% 页面与中文
+% =========================
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{ctex}
+
+% =========================
+% 常用宏包
+% =========================
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{adjustbox}
+\usetikzlibrary{arrows.meta, positioning,calc, backgrounds}
+
+% =========================
+% 红色高亮
+% =========================
+\newcommand{\myred}[1]{\textcolor{red}{#1}}
+
+\begin{document}
+
+% =========================
+% 封面
+% =========================
+\begin{titlepage}
+  \centering
+  \vspace*{2cm}
+  \Huge{\textbf{深 \ 圳 \ 大 \ 学 \ 实 \ 验 \ 报 \ 告}}\\[1.5cm]
+  
+  \Large{课程名称：\underline{Python 程序设计}}\\[0.5cm]
+  \Large{项目名称：\underline{实验三：鸢尾花数据分类与可视化}}\\[0.5cm]
+  \Large{学 \quad 院：\underline{人工智能学院}}\\[0.5cm]
+  \Large{专 \quad 业：\underline{计算机科学与技术（IEEE荣誉班）}}\\[0.5cm]
+  \Large{指导教师：\underline{樊超}}\\[0.5cm]
+  \Large{报告人：\underline{杨毅博} \hspace{1cm} 学号：\underline{2024280036}}\\[0.5cm]
+  \Large{实验时间：\underline{2025 年 12 月 14 日}}\\[0.5cm]
+  \Large{提交时间：\underline{2025 年 12 月 14 日}}\\[1.5cm]
+  \vfill
+  \Large{教务处制}
+\end{titlepage}
+
+\newpage
+
+% =========================
+\section{实验目的}
+\begin{itemize}[noitemsep]
+  \item 掌握分类模型在二维与三维特征空间中的可视化方法；
+  \item 通过决策边界与概率分布理解模型预测置信度；
+  \item 探索三特征条件下二分类与三分类的直观表达方式。
+\end{itemize}
+
+% =========================
+\section{数据集与实验设置}
+实验采用 Iris（鸢尾花）数据集。根据任务需要选取二维或三维特征子集，
+构造三分类或二分类问题。分类模型统一采用逻辑回归及其核近似扩展，
+并使用 \texttt{predict\_proba} 输出概率结果用于可视化。
+
+% =========================
+\section{方法概述}
+本实验围绕四类可视化任务展开：
+\begin{itemize}[noitemsep]
+  \item \textbf{task1}：二维三分类决策边界与概率热力图；
+  \item \textbf{task2}：三特征两分类的 3D 决策边界平面；
+  \item \textbf{task3}：固定单一特征的三维条件切片概率曲面；
+  \item \myred{\textbf{task4}}：\myred{三特征三分类的 3D Probability Map}。
+\end{itemize}
+
+其中，task4 将三维特征空间划分为均匀网格，
+对每个空间位置预测类别概率，
+并通过“颜色表示类别、透明度表示置信度”的方式进行整体可视化，
+以近似展示模型在三维输入空间中的分类行为。
+
+本项目所有源代码均已托管于 GitHub 仓库，便于复现与进一步研究：\\
+
+\textbf{\url{https://github.com/MisakuraRinn/project3_iris}}
+
+% =========================
+\section{可视化结果展示}
+
+\subsection*{二维与三维决策边界（task1, task2）}
+二维可视化直观展示不同类别在特征平面上的分布情况；
+三维决策边界以平面形式刻画模型在三特征空间中的分割效果。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.48\textwidth]{figures/Figure_1.png}
+\hfill
+\includegraphics[width=0.48\textwidth]{figures/Figure_2.png}
+\caption{二维分类结果（左）与三维二分类决策边界（右）}
+\end{figure}
+
+\subsection*{条件切片与三维概率图（task3, task4）}
+条件切片方法通过固定单一特征，
+观察模型输出概率在其余两个维度上的变化趋势，然后通过轮换两特征来确保三特征都被分析道。
+\myred{三维 Probability Map 则进一步在完整三维空间中，
+同时呈现类别归属与预测置信度，是本实验的主要创新点。}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.48\textwidth]{figures/Figure_3_1.png}
+\hfill
+\includegraphics[width=0.48\textwidth]{figures/Figure_4.png}
+\caption{条件切片概率曲面（左）与三维 Probability Map（右）}
+\end{figure}
+
+% =========================
+\section{项目结构与复现}
+
+
+\begin{figure}[H]
+\centering
+
+% 强制整张图不超过页面高度（同时按比例缩放宽度）
+\resizebox{!}{0.88\textheight}{%
+\begin{tikzpicture}[font=\footnotesize, node distance=5mm]
+
+\tikzset{
+  box/.style={
+    draw, rounded corners, align=left,
+    inner xsep=8pt, inner ysep=5pt,
+    text width=0.80\linewidth
+  },
+  boxTask/.style={
+    draw, rounded corners, align=left,
+    inner xsep=8pt, inner ysep=5pt,
+    text width=0.80\linewidth
+  },
+  boxTaskRed/.style={
+    draw, rounded corners, align=left,
+    inner xsep=8pt, inner ysep=5pt,
+    text width=0.80\linewidth,
+    text=red
+  },
+  boxOut/.style={
+    draw, rounded corners, align=left,
+    inner xsep=8pt, inner ysep=6pt,
+    text width=0.80\linewidth
+  },
+  arr/.style={-Latex, thick, shorten >=2pt, shorten <=2pt}
+}
+
+% ======= 通用流程（竖排） =======
+\node[box] (data) {
+\textbf{数据集}\\
+Iris（sklearn）\\
+4 维特征，3 类标签
+};
+
+\node[box, below=of data] (feat) {
+\textbf{特征 / 标签构造}\\
+2D/3D 特征子集选择\\
+二分类：合并为 0/1 \quad 三分类：保持 0/1/2
+};
+
+\node[box, below=of feat] (model) {
+\textbf{模型构建（可替换）}\\
+LogisticRegression \quad / \quad Nystroem(RBF)+LR\\
+统一接口：fit / predict / predict\_proba
+};
+
+\node[box, below=of model] (sample) {
+\textbf{推理采样}\\
+2D：meshgrid(h) 生成网格点\\
+3D：linspace(n) 生成 $(x_1,x_2,x_3)$ 网格\\
+对网格点调用 predict\_proba
+};
+
+\node[box, below=of sample] (post) {
+\textbf{后处理}\\
+类别：argmax(proba) \quad 置信度：max(proba)\\
+阈值过滤：conf $\ge \tau$（可选）
+};
+
+% ======= 任务层（竖排） =======
+\node[boxTask, below=7mm of post] (t1) {
+\textbf{task1.py（2 特征 / 3 分类）}\\
+输出：概率热力图（contourf / imshow）\\
+输出：MaxClass 区域（argmax）\\
+叠加：三类样本散点
+};
+
+\node[boxTask, below=of t1] (t2) {
+\textbf{task2.py（3 特征 / 2 分类）}\\
+输出：3D 决策边界平面（线性模型：$w^\top x + b = 0$）\\
+叠加：两类样本散点
+};
+
+\node[boxTask, below=of t2] (t3) {
+\textbf{task3.py（3 特征 / 2 分类）}\\
+核心：条件切片（固定 1 维，另外 2 维画概率曲面）\\
+输出：概率曲面 + 底/侧投影（contourf）\\
+轮换：三种特征组合
+};
+
+\node[boxTaskRed, below=of t3] (t4) {
+\textbf{task4.py（3 特征 / 3 分类）}\\
+核心：3D Probability Map\\
+颜色 = argmax(proba) \quad 透明度 = max(proba)\\
+实现：点云（快）/ 体素（细）
+};
+
+% ======= 输出层 =======
+\node[boxOut, below=7mm of t4] (out) {
+\textbf{输出与复现}\\
+运行：python task1.py $\sim$ python task4.py\\
+弹出图像或保存到 figures/，并在报告中引用
+};
+
+% ======= 主流程箭头：全部“框-框”直连，不会穿过任何框 =======
+\draw[arr] (data.south) -- (feat.north);
+\draw[arr] (feat.south) -- (model.north);
+\draw[arr] (model.south) -- (sample.north);
+\draw[arr] (sample.south) -- (post.north);
+
+\draw[arr] (post.south) -- (t1.north);
+\draw[arr] (t1.south) -- (t2.north);
+\draw[arr] (t2.south) -- (t3.north);
+\draw[arr] (t3.south) -- (t4.north);
+\draw[arr] (t4.south) -- (out.north);
+
+\end{tikzpicture}%
+}
+
+\caption{项目结构示意图（自上而下）：通用流程 $\rightarrow$ task1--task4 $\rightarrow$ 输出与复现（红色为主要贡献模块）。}
+\label{fig:project-structure-vertical}
+\end{figure}
+
+
+
+
+
+
+\subsection*{复现说明}
+依次运行 \texttt{task1.py} 至 \texttt{task4.py} 即可复现实验结果。
+
+% =========================
+\section{总结}
+本实验从二维分类可视化出发，逐步扩展至三维特征空间。
+\myred{通过三维 Probability Map 的构建，
+实现了对多分类模型在输入空间中决策行为与置信度分布的直观表达，
+为理解复杂分类模型提供了一种有效的可视化思路。}
+
+\end{document}
